@@ -57,14 +57,15 @@
 //! println!("{}", a * b);
 //! ```
 //!
-//! See the "Features" section for instructions for enabling random number generation.
+//! See the "Features" section for instructions for enabling random number
+//! generation.
 //!
 //! ## Features
 //!
 //! The `std` crate feature is enabled by default, and is mandatory before Rust
 //! 1.36 and the stabilized `alloc` crate.  If you depend on `num-bigint` with
-//! `default-features = false`, you must manually enable the `std` feature yourself
-//! if your compiler is not new enough.
+//! `default-features = false`, you must manually enable the `std` feature
+//! yourself if your compiler is not new enough.
 //!
 //! ### Random Generation
 //!
@@ -93,11 +94,9 @@ extern crate std;
 
 #[cfg(feature = "std")]
 mod std_alloc {
-    pub(crate) use std::borrow::Cow;
     #[cfg(any(feature = "quickcheck", feature = "arbitrary"))]
     pub(crate) use std::boxed::Box;
-    pub(crate) use std::string::String;
-    pub(crate) use std::vec::Vec;
+    pub(crate) use std::{borrow::Cow, string::String, vec::Vec};
 }
 
 #[cfg(not(feature = "std"))]
@@ -106,11 +105,9 @@ extern crate alloc;
 
 #[cfg(not(feature = "std"))]
 mod std_alloc {
-    pub(crate) use alloc::borrow::Cow;
     #[cfg(any(feature = "quickcheck", feature = "arbitrary"))]
     pub(crate) use alloc::boxed::Box;
-    pub(crate) use alloc::string::String;
-    pub(crate) use alloc::vec::Vec;
+    pub(crate) use alloc::{borrow::Cow, string::String, vec::Vec};
 }
 
 use core::fmt;
@@ -182,7 +179,8 @@ impl Error for ParseBigIntError {
     }
 }
 
-/// The error type returned when a checked conversion regarding big integer fails.
+/// The error type returned when a checked conversion regarding big integer
+/// fails.
 #[cfg(has_try_from)]
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]
 pub struct TryFromBigIntError<T> {
@@ -226,12 +224,9 @@ impl<T> fmt::Display for TryFromBigIntError<T> {
     }
 }
 
-pub use crate::biguint::BigUint;
-pub use crate::biguint::ToBigUint;
+pub use crate::biguint::{BigUint, ToBigUint};
 
-pub use crate::bigint::BigInt;
-pub use crate::bigint::Sign;
-pub use crate::bigint::ToBigInt;
+pub use crate::bigint::{BigInt, Sign, ToBigInt};
 
 #[cfg(feature = "rand")]
 pub use crate::bigrand::{RandBigInt, RandomBits, UniformBigInt, UniformBigUint};
@@ -243,8 +238,8 @@ mod big_digit {
     #[cfg(u64_digit)]
     pub(crate) type BigDigit = u64;
 
-    /// A `DoubleBigDigit` is the internal type used to do the computations.  Its
-    /// size is the double of the size of `BigDigit`.
+    /// A `DoubleBigDigit` is the internal type used to do the computations.
+    /// Its size is the double of the size of `BigDigit`.
     #[cfg(not(u64_digit))]
     pub(crate) type DoubleBigDigit = u64;
     #[cfg(u64_digit)]
