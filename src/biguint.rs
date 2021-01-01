@@ -2632,6 +2632,23 @@ impl BigUint {
         self.data.len() as u64 * u64::from(big_digit::BITS) - zeros
     }
 
+    /// Sets the `bit`th bit of this number to `bit_val`.
+    #[inline]
+    pub fn set_bit(&mut self, bit: usize, bit_val: bool) {
+        let bits = big_digit::BITS as usize;
+        let word = bit / bits;
+        let word_bit = bit % bits;
+        if bit_val && word >= self.data.len() {
+            self.data.resize(word + 1, 0);
+        }
+        if bit_val || word < self.data.len() {
+            let mask:BigDigit = 1 << word_bit;
+            let ptr = &mut self.data[word];
+            *ptr = if bit_val { *ptr | mask } else { *ptr & !mask };
+            self.normalize();
+        }
+    }
+
     /// Strips off trailing zero bigdigits - comparisons require the last element in the vector to
     /// be nonzero.
     #[inline]
