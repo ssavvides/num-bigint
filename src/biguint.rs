@@ -2806,38 +2806,6 @@ fn plain_modpow(base: &BigUint, exp_data: &[BigDigit], modulus: &BigUint) -> Big
     acc
 }
 
-#[test]
-fn test_plain_modpow() {
-    let two = &BigUint::from(2u32);
-    let modulus = BigUint::from(0x1100u32);
-
-    let exp = vec![0, 0b1];
-    assert_eq!(
-        two.pow(0b1_00000000_u32) % &modulus,
-        plain_modpow(&two, &exp, &modulus)
-    );
-    let exp = vec![0, 0b10];
-    assert_eq!(
-        two.pow(0b10_00000000_u32) % &modulus,
-        plain_modpow(&two, &exp, &modulus)
-    );
-    let exp = vec![0, 0b110010];
-    assert_eq!(
-        two.pow(0b110010_00000000_u32) % &modulus,
-        plain_modpow(&two, &exp, &modulus)
-    );
-    let exp = vec![0b1, 0b1];
-    assert_eq!(
-        two.pow(0b1_00000001_u32) % &modulus,
-        plain_modpow(&two, &exp, &modulus)
-    );
-    let exp = vec![0b1100, 0, 0b1];
-    assert_eq!(
-        two.pow(0b1_00000000_00001100_u32) % &modulus,
-        plain_modpow(&two, &exp, &modulus)
-    );
-}
-
 impl_sum_iter_type!(BigUint);
 impl_product_iter_type!(BigUint);
 
@@ -3023,6 +2991,38 @@ fn get_radix_base(radix: u32, bits: u8) -> (BigDigit, usize) {
     }
 }
 
+#[test]
+fn test_plain_modpow() {
+    let two = &BigUint::from(2u32);
+    let modulus = BigUint::from(0x1100u32);
+
+    let exp = vec![0, 0b1];
+    assert_eq!(
+        two.pow(0b1_00000000_u32) % &modulus,
+        plain_modpow(&two, &exp, &modulus)
+    );
+    let exp = vec![0, 0b10];
+    assert_eq!(
+        two.pow(0b10_00000000_u32) % &modulus,
+        plain_modpow(&two, &exp, &modulus)
+    );
+    let exp = vec![0, 0b110010];
+    assert_eq!(
+        two.pow(0b110010_00000000_u32) % &modulus,
+        plain_modpow(&two, &exp, &modulus)
+    );
+    let exp = vec![0b1, 0b1];
+    assert_eq!(
+        two.pow(0b1_00000001_u32) % &modulus,
+        plain_modpow(&two, &exp, &modulus)
+    );
+    let exp = vec![0b1100, 0, 0b1];
+    assert_eq!(
+        two.pow(0b1_00000000_00001100_u32) % &modulus,
+        plain_modpow(&two, &exp, &modulus)
+    );
+}
+
 #[cfg(not(u64_digit))]
 #[test]
 fn test_from_slice() {
@@ -3056,6 +3056,17 @@ fn test_from_slice() {
     check(&[0, 0, 1, 2], &[0, 8_589_934_593]);
     check(&[0, 0, 1, 2, 0, 0], &[0, 8_589_934_593]);
     check(&[-1i32 as u32], &[(-1i32 as u32) as BigDigit]);
+}
+
+#[test]
+fn test_set_bit() {
+    let five = BigUint::from(5u32);
+    let seven = BigUint::from(7u32);
+    let mut x = five.clone();
+    x.set_bit(1, true);
+    assert_eq!(x, seven);
+    x.set_bit(1, false);
+    assert_eq!(x, five);
 }
 
 #[test]
